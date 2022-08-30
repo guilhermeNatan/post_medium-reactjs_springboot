@@ -2,18 +2,17 @@ FROM maven:3.8.6-openjdk-11 as build
 
 WORKDIR /app
 
-COPY ./pom.xml .
+COPY ./backend/pom.xml .
 
 RUN mvn dependency:go-offline -B
 
-COPY ./src src
+COPY ./backend/src src
 
 RUN mvn clean package
 
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
-#FROM openjdk:8-jdk-alpine
-FROM openjdk:11
+FROM amazoncorretto:11-alpine3.15
 
 ARG DEPENDENCY=/app/target/dependency
 
